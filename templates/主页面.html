@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>词云网站</title>
+    <link rel="stylesheet" href="../static/layui/css/layui.css">
+</head>
+<body>
+<h1 style="text-align: center">小词云</h1>
+<br><br>
+<div class="layui-form" style="margin-left: 30%">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="margin-top: 20px">请输入绘制词云的段落：</label>
+        <div class="layui-input-block">
+            <textarea name="" id="" cols="10" rows="10" class="layui-textarea content" autocomplete="off" style="width: 700px"></textarea>
+        </div>
+        </div>
+
+    <br><br><br>
+    <div class="layui-form-item"><img src="" alt="词云图片" width="700" height="300" class="wordcloud_image"></div>
+    <div class="layui-form-item" style="margin-left: 20%">
+        <button class="layui-btn layui-btn-radius layui-btn-normal wordcloud_create">生成词云</button>
+        <a class="layui-btn layui-btn-radius layui-btn-warm wordcloud_download">下载图片</a>
+    </div>
+</div>
+
+<script>var base64 = '';</script>
+<script src="/static/jquery-3.6.0.js"></script>
+<script>
+   $('.wordcloud_create').click(function () {
+       let content = $('.content').val();
+        $.ajax({
+            url: '/wordcloud',
+            type: 'post',
+            data: {
+                content: content
+            },
+            async: false,
+            success: function (data) {
+                base64 = data.base64;
+                $('.wordcloud_image').attr('src', data.base64)
+            },
+            error: function () {
+                alert('请求错误')
+            }
+        })
+   })
+
+</script>
+<script>
+    $('.wordcloud_download').click(
+
+        function () {
+            if(base64) {
+            $(this).attr('href', base64);
+            $(this).attr('download', 'word-cloud')}
+            else {
+                alert('尚未生成词云图！')
+            }
+        }
+    )
+</script>
+</body>
+</html>
